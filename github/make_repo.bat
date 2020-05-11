@@ -1,6 +1,7 @@
 @ECHO OFF
 SETLOCAL
 FOR /F %%A IN (README.md) DO CALL :make %%A
+git add .
 git commit -m "Add github repositories"
 git push
 ENDLOCAL

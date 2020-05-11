@@ -1,0 +1,10 @@
+.dockerignore
+.git
+Makefile
+docker*.yml
+*.log
+.gitignore
+.editorconfig
+.idea
+.github
+/mikrotik-hosts-parser

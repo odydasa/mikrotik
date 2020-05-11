@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="icon" href="favicon.ico" sizes="16x16"/>
+    <link rel="manifest" href="webmanifest.json"/>
+    <meta name="theme-color" content="#272B30"/>
+
+    <style>
+        html, body {
+            background-color: #272B30;
+            font-family: sans-serif;
+        }
+
+        html, body, a {
+            color: #aaa;
+        }
+
+        fieldset {
+            border-style: none;
+        }
+
+        fieldset legend {
+            font-size: 1.6em;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: 0 0;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 250, .25);
+            border-radius: 3px;
+        }
+
+        ::selection {
+            background: rgba(255, 255, 250, .14);
+        }
+    </style>
+
+    <!-- Preview: <https://bootswatch.com/slate/> -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/thomaspark/bootswatch@4.4.1/dist/slate/bootstrap.min.css"
+          integrity="sha384-G9YbB4o4U6WS4wCthMOpAeweY4gQJyyx0P3nZbEBHyz+AtNoeasfRChmek1C2iqV"
+          crossorigin="anonymous" />
+
+    <!-- Icons: <https://fontawesome.com/icons/> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css"
+          integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk="
+          media="print" onload="this.media='all'"
+          crossorigin="anonymous" />
+
+    <!-- Usage: <https://highlightjs.org/usage/> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/default.min.css"
+          integrity="sha256-zcunqSn1llgADaIPFyzrQ8USIjX2VpuxHzUwYisOwo8="
+          media="print" onload="this.media='all'"
+          crossorigin="anonymous" />
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/monokai-sublime.min.css"
+          integrity="sha256-kTdkFYZP3TqSvlJAUiZ6/s5L2xu4xsdU9eYMWsKOk74="
+          media="print" onload="this.media='all'"
+          crossorigin="anonymous" />
+
+    <title>MikroTik DNS Stop AD</title>
+</head>
+<body>
+
+<noscript>
+    <div class="text-center">
+        <div class="alert alert-danger mt-3 d-inline-block">
+            <strong>JavaScript</strong> is required on this page.
+        </div>
+    </div>
+</noscript>
+
+<div id="app">
+    <div class="w-100 text-center mt-5">
+        <span class="spinner-border spinner-border-sm mr-1"></span> Loading assets
+    </div>
+</div>
+
+<!-- Documentation: <https://github.com/axios/axios> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"
+        integrity="sha256-T/f7Sju1ZfNNfBh7skWn0idlCBcI3RwdLSS4/I7NQKQ="
+        crossorigin="anonymous"></script>
+
+<!-- Documentation: <https://vuejs.org/v2/api/> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.11/vue.min.js"
+        integrity="sha256-ngFW3UnAN0Tnm76mDuu7uUtYEcG3G5H1+zioJw3t+68="
+        crossorigin="anonymous"></script>
+
+<!-- Documentation: <https://github.com/FranckFreiburger/http-vue-loader> -->
+<script src="https://cdn.jsdelivr.net/gh/FranckFreiburger/http-vue-loader@1.4.1/src/httpVueLoader.min.js"
+        crossorigin="anonymous"></script>
+
+<!-- Documentation: <https://highlightjs.org/usage/> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js"
+        integrity="sha256-eOgo0OtLL4cdq7RdwRUiGKLX9XsIJ7nGhWEKbohmVAQ="
+        crossorigin="anonymous"></script>
+
+<script>
+    'use strict';
+
+    /** @typedef {Vue} Vue */
+    /** @typedef {Axios} axios */
+    /** @typedef {Object} httpVueLoader */
+
+    if (window.location.hostname === '127.0.0.1') {
+        // @link <https://github.com/vuejs/vue-devtools/issues/190#issuecomment-264203810>
+        Vue.config.devtools = true; // Disable on "production"
+    }
+
+    // @link <https://github.com/FranckFreiburger/http-vue-loader/#api>
+    httpVueLoader.httpRequest = function (url) {
+        return axios.get(url)
+                .then(function (res) {
+                    return res.data;
+                })
+                .catch(function (err) {
+                    return Promise.reject(err.status);
+                });
+    };
+
+    Vue.use(httpVueLoader);
+
+    new Vue({
+        el: '#app',
+        template: `<app></app>`,
+        components: {
+            'app': 'url:components/app.vue',
+        },
+    });
+</script>
+
+</body>
+</html>

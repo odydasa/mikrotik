@@ -1,9 +1,9 @@
 @ECHO OFF
 SETLOCAL
 FOR /F %%A IN (README.md) DO CALL :make %%A
-git add .
-git commit -m "Add github repositories"
-git push
+REM git add .
+REM git commit -m "Add github repositories"
+REM git push
 ENDLOCAL
 GOTO :EOF
 
@@ -21,10 +21,13 @@ IF EXIST "%_folder%" (
   git rm --cached "%_folder%" > nul
   IF EXIST "%_folder%" RD /S /Q "%_folder%" > nul
 )
-git fetch %_git% "%_folder%"
-RD /S /Q "%_folder%\.git"
+MD "%_folder%"
+CD "%_folder%"
+git fetch %_git%
+CD ..
+REM RD /S /Q "%_folder%\.git"
 icacls "%_folder%" /setowner Everyone /C /T /L > nul
 attrib -a -i "%_folder%" /S /D /L
-git add "%_folder%" > nul
+REM git add "%_folder%" > nul
 ECHO.
 GOTO :EOF

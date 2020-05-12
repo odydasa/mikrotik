@@ -17,9 +17,9 @@ FOR %%A IN ("%_git%") DO SET _folder=%%~dpA
 SET _folder=%_folder:~0,-1%
 FOR %%A IN ("%_folder%") DO SET _folder=%%~nxA
 IF EXIST "%_folder%" (
-  git rm -r -f "%_folder%" > nul
-  git rm --cached "%_folder%" > nul
-  IF EXIST "%_folder%" RD /S /Q "%_folder%" > nul
+  git rm -r -f "%_folder%"
+  git rm --cached "%_folder%"
+  IF EXIST "%_folder%" RD /S /Q "%_folder%"
 )
 git clone %_git% "%_folder%"
 RD /S /Q "%_folder%\.git"

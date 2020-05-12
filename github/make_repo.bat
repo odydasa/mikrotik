@@ -1,8 +1,12 @@
 @ECHO OFF
 SETLOCAL
+SET _repo=%%~dp0
+SET _repo=%_repo:~0,-1%
+FOR %%A IN ("%_folder%") DO SET _repo=%%~nxA
+
 FOR /F %%A IN (README.md) DO CALL :make %%A
 git add .
-git commit -m "Add github repositories"
+git commit -m "Add %_repo% repositories"
 git push
 ENDLOCAL
 GOTO :EOF

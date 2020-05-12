@@ -21,7 +21,7 @@ IF EXIST "%_folder%" (
   git rm --cached "%_folder%" > nul
   IF EXIST "%_folder%" RD /S /Q "%_folder%" > nul
 )
-git clone %_git% "%_folder%"
+git fetch %_git% "%_folder%"
 RD /S /Q "%_folder%\.git"
 icacls "%_folder%" /setowner Everyone /C /T /L > nul
 attrib -a -i "%_folder%" /S /D /L

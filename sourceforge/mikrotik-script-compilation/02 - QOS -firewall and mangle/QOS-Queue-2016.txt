@@ -1,0 +1,19 @@
+/queue tree
+add comment=DOWNLOAD max-limit=200M name=TOTAL-IN parent=global queue=default
+add comment=UPLOAD max-limit=200M name=TOTAL-OUT parent=global queue=default
+add name=Down-1 packet-mark=Down-1-pkt parent=TOTAL-IN priority=1 queue=default
+add name=Down-2 packet-mark=Down-2-pkt parent=TOTAL-IN priority=2 queue=default
+add name=Down-8 packet-mark=Down-8-pkt parent=TOTAL-IN queue=pcq-download-default
+add name=Up-1 packet-mark=Up-1-pkt parent=TOTAL-OUT priority=1 queue=default
+add name=Up-2 packet-mark=Up-2-pkt parent=TOTAL-OUT priority=2 queue=default
+add name=Up-8 packet-mark=Up-8-pkt parent=TOTAL-OUT queue=pcq-upload-default
+add name=Down-3 packet-mark=Down-3-pkt parent=TOTAL-IN priority=3 queue=default
+add name=Down-4 packet-mark=Down-4-pkt parent=TOTAL-IN priority=4 queue=default
+add name=Down-5 packet-mark=Down-5-pkt parent=TOTAL-IN priority=5 queue=default
+add name=Down-6 packet-mark=Down-6-pkt parent=TOTAL-IN priority=6 queue=default
+add packet-mark=Down-7-pkt parent=TOTAL-IN priority=7 queue=pcq-download-default
+add name=Up-3 packet-mark=Up-3-pkt parent=TOTAL-OUT priority=3 queue=default
+add name=Up-4 packet-mark=Up-4-pkt parent=TOTAL-OUT priority=4 queue=default
+add name=Up-5 packet-mark=Up-5-pkt parent=TOTAL-OUT priority=5 queue=default
+add name=Up-6 packet-mark=Up-6-pkt parent=TOTAL-OUT priority=6 queue=default
+add packet-mark=Up-7-pkt parent=TOTAL-OUT priority=7 queue=pcq-upload-default

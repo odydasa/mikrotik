@@ -1,0 +1,33 @@
+# script potrebuje funkcne nastavenie email servera + zmenu "FTPUSER" "FTPUSERPASS" "FTPIP" adresa@server.sk priapdne aj dst-path="/mikrotik/$backupfile.rsc" na vlastne udaje
+
+:log info "Backup START";
+
+:local months {{"jan";"01"};{"feb";"02"};{"mar";"03"};{"apr";"04"};{"may";"05"};{"jun";"06"};{"jul";"07"};{"aug";"08"};{"sep";"09"};{"oct";"10"};{"nov";"11"};{"dec";"12"}};
+:local date [/system clock get date]
+:local mon [:pick $date 0 3]
+:local mm ""
+
+# najdi a prirad cislo mesica do premennej $mm
+:foreach month in=$months do={
+:if ([:pick $month 0] = $mon) do={
+:set mm [:pick $month 1];
+}
+}
+
+:local backupfile ([/system identity get name] . "-" . [:pick $date 4 6] . $mm . [:pick $date 7 11]);
+:local ftpusername "FTPUSER";
+:local ftppasswrd "FTPUSERPASS";
+:local ftpserverip "FTPIP";
+:local ftpserverport "21";
+/system backup save name=$backupfile;
+:delay 15s;
+/tool fetch address=$ftpserverip src-path="$backupfile.backup" user=$ftpusername password=$ftppasswrd mode=ftp dst-path="/mikrotik/$backupfile.backup" upload=yes;
+:delay 15s;
+/file remove $backupfile;
+/export file=$backupfile;
+:delay 15s;
+/tool fetch address=$ftpserverip src-path="$backupfile.rsc" user=$ftpusername password=$ftppasswrd mode=ftp dst-path="/mikrotik/$backupfile.rsc" upload=yes;
+:delay 15s;
+/file remove $backupfile;
+/tool e-mail send to=adresa@server.sk subject=([/system identity get name] . " -- " . date . " -- RB" . [/system routerboard get model] . " -- " .[/system resource get version]) body="Backup END, subory odoslane na FTP server" 
+:log info "Backup END, subory odoslane na FTP server";

@@ -1,0 +1,104 @@
+/ip firewall mangle
+add action=mark-connection chain=postrouting comment="ALL - UPLOAD" new-connection-mark=Down-7-con out-interface=!ether1
+add action=mark-connection chain=prerouting comment="ALL - DOWNLOAD" in-interface=!ether1 new-connection-mark=Down-6-con
+add action=mark-connection chain=postrouting comment="HTTPS UP" connection-bytes=0-1000000 dst-port=443 new-connection-mark=UP-5-con protocol=tcp
+add action=mark-connection chain=postrouting comment="HTTPS UP heavy" connection-bytes=100000-0 dst-port=443 \
+    new-connection-mark=UP-7-con out-interface=!ether1 protocol=tcp
+add action=mark-connection chain=prerouting comment="HTTPS DOWN" connection-bytes=0-40000000 in-interface=!ether1 \
+    new-connection-mark=Down-4-con protocol=tcp src-port=443
+add action=mark-connection chain=prerouting comment="HTTPS DOWN - HEAWY" connection-bytes=40000000-0 in-interface=!ether1 \
+    new-connection-mark=Down-7-con protocol=tcp src-port=443
+add action=mark-connection chain=postrouting comment="HTTP UP" dst-port=80 new-connection-mark=UP-6-con out-interface=\
+    !ether1 protocol=tcp
+add action=mark-connection chain=postrouting comment="HTTP UP heavy" connection-bytes=100000-0 dst-port=80 new-connection-mark=\
+    UP-7-con out-interface=!ether1 protocol=tcp
+add action=mark-connection chain=prerouting comment="HTTP DOWN" connection-bytes=0-1100000 in-interface=!ether1 \
+    new-connection-mark=Down-4-con protocol=tcp src-port=80
+add action=mark-connection chain=prerouting comment="HTTP DOWN - HEAVY" connection-bytes=1100000-0 in-interface=!ether1 \
+    new-connection-mark=Down-7-con protocol=tcp src-port=80
+add action=mark-connection chain=postrouting comment="DNS UP" dst-port=53 new-connection-mark=Down-1-con out-interface=\
+    !ether1 protocol=tcp
+add action=mark-connection chain=postrouting dst-port=53 new-connection-mark=Down-1-con out-interface=!ether1 protocol=\
+    udp
+add action=mark-connection chain=prerouting comment="DNS DOWN" in-interface=!ether1 new-connection-mark=Down-1-con \
+    protocol=tcp src-port=53
+add action=mark-connection chain=prerouting in-interface=!ether1 new-connection-mark=Down-1-con protocol=udp src-port=53
+add action=mark-connection chain=postrouting comment="FTP & SFTP UP" dst-port=20,21,115 new-connection-mark=Down-3-con \
+    out-interface=!ether1 protocol=tcp
+add action=mark-connection chain=prerouting comment="FTP & SFTP DOWN" in-interface=!ether1 new-connection-mark=Down-4-con \
+    protocol=tcp src-port=20,21,115
+add action=mark-connection chain=postrouting comment="ICMP UP" new-connection-mark=UP-1-con out-interface=!ether1 \
+    protocol=icmp
+add action=mark-connection chain=prerouting comment="ICMP DOWN" in-interface=!ether1 new-connection-mark=Down-1-con \
+    protocol=icmp
+add action=mark-connection chain=postrouting comment="SSH UP" dst-port=22 new-connection-mark=UP-1-con out-interface=\
+    !ether1 protocol=udp
+add action=mark-connection chain=postrouting dst-port=22 new-connection-mark=UP-1-con out-interface=!ether1 protocol=tcp
+add action=mark-connection chain=prerouting comment="SSH DOWN" in-interface=!ether1 new-connection-mark=Down-1-con \
+    protocol=tcp src-port=22
+add action=mark-connection chain=prerouting in-interface=!ether1 new-connection-mark=Down-1-con protocol=udp src-port=22
+add action=mark-connection chain=postrouting comment="TELNET UP" dst-port=23 new-connection-mark=UP-1-con out-interface=\
+    !ether1 protocol=tcp
+add action=mark-connection chain=postrouting dst-port=23 new-connection-mark=UP-1-con out-interface=!ether1 protocol=udp
+add action=mark-connection chain=prerouting comment="TELNET TCP DOWN" in-interface=!ether1 new-connection-mark=Down-1-con \
+    protocol=tcp src-port=23
+add action=mark-connection chain=prerouting in-interface=!ether1 new-connection-mark=Down-1-con protocol=udp src-port=23
+add action=mark-connection chain=postrouting comment="EMAIL UP" dst-port=110,995,143,993,25,465,587 new-connection-mark=\
+    UP-3-con out-interface=!ether1 protocol=tcp
+add action=mark-connection chain=prerouting comment="EMAIL DOWN" in-interface=!ether1 new-connection-mark=Down-2-con \
+    protocol=tcp src-port=110,995,143,993,25,465,587
+add action=mark-connection chain=postrouting comment="P2P UP" new-connection-mark=UP-8-con out-interface=!ether1 p2p=\
+    all-p2p
+add action=mark-connection chain=prerouting comment="P2P DOWN" in-interface=!ether1 new-connection-mark=Down-8-con p2p=\
+    all-p2p
+add action=mark-connection chain=postrouting comment="ACK UP" new-connection-mark=UP-1-con out-interface=!ether1 \
+    packet-size=0-123 protocol=tcp tcp-flags=ack
+add action=mark-connection chain=prerouting comment="ACK DOWN" in-interface=!ether1 new-connection-mark=Down-1-con \
+    packet-size=0-123 protocol=tcp tcp-flags=ack
+add action=mark-connection chain=postrouting comment="SYN UP " new-connection-mark=UP-1-con out-interface=!ether1 \
+    packet-size=0-666 protocol=tcp tcp-flags=syn
+add action=mark-connection chain=prerouting comment="SYN DOWN" in-interface=!ether1 new-connection-mark=Down-1-con \
+    packet-size=0-666 protocol=tcp tcp-flags=syn
+add action=mark-connection chain=postrouting comment="VOIP UP" dst-port=5060,5061,5004,5005,5010,5521,11000,10000,1719,16384,13392 new-connection-mark=UP-2-con protocol=udp
+add action=mark-connection chain=postrouting dst-port=5082,3478,2427,19295,19302,5243,7985 new-connection-mark=UP-2-con \
+    out-interface=!ether1 protocol=udp
+add action=mark-connection chain=prerouting comment="VOIP DOWN" in-interface=!ether1 new-connection-mark=Down-2-con \
+    protocol=udp src-port=5060,5061,5004,5005,5010,5521,11000,10000,1719,16384,13392
+add action=mark-connection chain=prerouting in-interface=!ether1 new-connection-mark=Down-2-con protocol=udp src-port=\
+    5082,3478,2427,19295,19302,5243,7985
+add action=mark-connection chain=postrouting comment="GOOGLE UP" dst-port=5222,5228 new-connection-mark=UP-4-con out-interface=\
+    !ether1 protocol=tcp
+add action=mark-connection chain=prerouting comment="GOOGLE DOWN" in-interface=!ether1 new-connection-mark=Down-5-con \
+    protocol=tcp src-port=5222,5228
+add action=mark-connection chain=postrouting comment="STEAM UP" dst-port=27000-27015 new-connection-mark=UP-2-con \
+    out-interface=!ether1 protocol=udp
+add action=mark-connection chain=prerouting comment="STEAM DOWN" in-interface=!ether1 new-connection-mark=Down-2-con \
+    protocol=udp src-port=27000-27015
+add action=mark-connection chain=postrouting comment=GAME-DAYZ-UP dst-port=2300-2302 new-connection-mark=UP-2-con \
+    out-interface=!ether1 protocol=udp
+add action=mark-connection chain=prerouting comment=GAME-DAYZ-DOWN in-interface=!ether1 new-connection-mark=Down-2-con \
+    protocol=udp src-port=2300-2302
+add action=mark-packet chain=postrouting comment="Mark prior 1" connection-mark=UP-1-con new-packet-mark=Up-1-pkt passthrough=\
+    no
+add action=mark-packet chain=postrouting comment="Mark prior 2" connection-mark=UP-2-con new-packet-mark=Up-2-pkt passthrough=\
+    no
+add action=mark-packet chain=postrouting comment="Mark prior 8" connection-mark=UP-8-con new-packet-mark=Up-8-pkt passthrough=\
+    no
+add action=mark-packet chain=postrouting comment="Mark prior 7" connection-mark=UP-7-con new-packet-mark=Up-7-pkt passthrough=\
+    no
+add action=mark-packet chain=postrouting comment="Mark prior 3" connection-mark=UP-3-con new-packet-mark=Up-3-pkt passthrough=\
+    no
+add action=mark-packet chain=postrouting comment="Mark prior 4" connection-mark=UP-4-con new-packet-mark=Up-4-pkt passthrough=\
+    no
+add action=mark-packet chain=postrouting comment="Mark prior 5" connection-mark=UP-5-con new-packet-mark=Up-5-pkt passthrough=\
+    no
+add action=mark-packet chain=postrouting comment="Mark prior 6" connection-mark=UP-6-con new-packet-mark=Up-6-pkt passthrough=\
+    no
+add action=mark-packet chain=prerouting comment="Priorita 1 - mark" connection-mark=Down-1-con new-packet-mark=Down-1-pkt
+add action=mark-packet chain=prerouting comment="Priorita 2 - mark" connection-mark=Down-2-con new-packet-mark=Down-2-pkt
+add action=mark-packet chain=prerouting comment="Priorita 8 - mark" connection-mark=Down-8-con new-packet-mark=Down-8-pkt
+add action=mark-packet chain=prerouting comment="Priorita 7 - mark" connection-mark=Down-7-con new-packet-mark=Down-7-pkt
+add action=mark-packet chain=prerouting comment="Priorita 3 - mark" connection-mark=Down-3-con new-packet-mark=Down-3-pkt
+add action=mark-packet chain=prerouting comment="Priorita 4 - mark" connection-mark=Down-4-con new-packet-mark=Down-4-pkt
+add action=mark-packet chain=prerouting comment="Priorita 5 - mark" connection-mark=Down-5-con new-packet-mark=Down-5-pkt
+add action=mark-packet chain=prerouting comment="Priorita 6 - mark" connection-mark=Down-6-con new-packet-mark=Down-6-pkt
